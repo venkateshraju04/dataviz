@@ -4,7 +4,6 @@ from graph import graph
 
 st.set_page_config(page_title="Data Analysis Agent", page_icon="📈", layout="wide")
 
-# Inject custom CSS for a more premium look
 st.markdown("""
 <style>
     .main {
