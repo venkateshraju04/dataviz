@@ -239,9 +239,8 @@ function Hero() {
                     <button
                       key={i}
                       onClick={() => setActiveIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === activeIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-soft/40"
-                      }`}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-soft/40"
+                        }`}
                       aria-label={`View chart ${i + 1}`}
                     />
                   ))}
@@ -407,7 +406,7 @@ function LineChart() {
         </linearGradient>
         <filter id="glow">
           <feGaussianBlur stdDeviation="2" result="blur" />
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
@@ -422,7 +421,7 @@ function LineChart() {
       ))}
 
       {/* X-axis labels */}
-      {["Jan","Feb","Mar","Apr","May","Jun","Jul"].map((m, i) => (
+      {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"].map((m, i) => (
         <text key={m} x={30 + i * 42} y={138} textAnchor="middle" className="fill-[#9ca3af] text-[7px]">{m}</text>
       ))}
 
@@ -463,8 +462,8 @@ function LineChart() {
 
       {/* Data points on primary line */}
       {[
-        [30,100],[72,85],[114,55],[156,30],[198,28],[240,22],[290,15],
-      ].map(([cx,cy], i) => (
+        [30, 100], [72, 85], [114, 55], [156, 30], [198, 28], [240, 22], [290, 15],
+      ].map(([cx, cy], i) => (
         <g key={i} className="animate-rise" style={{ animationDelay: `${300 + i * 60}ms` }}>
           <circle cx={cx} cy={cy} r="5" fill={COLORS.blue} fillOpacity="0.15" />
           <circle cx={cx} cy={cy} r="3" fill="white" stroke={COLORS.blue} strokeWidth="1.5" />
@@ -568,10 +567,10 @@ function DonutChart() {
 
 function ScatterChart() {
   const clusters = [
-    { points: [[25,108],[38,96],[50,100],[42,112],[55,92],[32,104]], color: COLORS.blue, label: "Organic" },
-    { points: [[80,78],[95,65],[110,72],[100,82],[115,60],[90,75]], color: COLORS.violet, label: "Paid" },
-    { points: [[145,50],[160,42],[175,48],[155,55],[170,38],[180,45]], color: COLORS.emerald, label: "Social" },
-    { points: [[210,28],[225,22],[240,30],[220,35],[250,18],[235,25]], color: COLORS.amber, label: "Email" },
+    { points: [[25, 108], [38, 96], [50, 100], [42, 112], [55, 92], [32, 104]], color: COLORS.blue, label: "Organic" },
+    { points: [[80, 78], [95, 65], [110, 72], [100, 82], [115, 60], [90, 75]], color: COLORS.violet, label: "Paid" },
+    { points: [[145, 50], [160, 42], [175, 48], [155, 55], [170, 38], [180, 45]], color: COLORS.emerald, label: "Social" },
+    { points: [[210, 28], [225, 22], [240, 30], [220, 35], [250, 18], [235, 25]], color: COLORS.amber, label: "Email" },
   ];
 
   return (
@@ -594,7 +593,7 @@ function ScatterChart() {
         <text key={g.y} x="4" y={g.y + 3} className="fill-[#9ca3af] text-[6px]">{g.l}</text>
       ))}
       {/* X-axis labels */}
-      {["$0","$2k","$5k","$10k","$15k"].map((l, i) => (
+      {["$0", "$2k", "$5k", "$10k", "$15k"].map((l, i) => (
         <text key={i} x={35 + i * 62} y={140} textAnchor="middle" className="fill-[#9ca3af] text-[6px]">{l}</text>
       ))}
       {/* Grid */}
@@ -667,13 +666,13 @@ function AreaChart() {
       </defs>
 
       {/* Axis + grid */}
-      {[{ y: 15, l: "400" },{ y: 45, l: "300" },{ y: 75, l: "200" },{ y: 105, l: "100" },{ y: 125, l: "0" }].map((g) => (
+      {[{ y: 15, l: "400" }, { y: 45, l: "300" }, { y: 75, l: "200" }, { y: 105, l: "100" }, { y: 125, l: "0" }].map((g) => (
         <g key={g.y}>
           <text x="2" y={g.y + 3} className="fill-[#9ca3af] text-[6px]">{g.l}</text>
           <line x1="25" y1={g.y} x2="295" y2={g.y} stroke="#e5e7eb" strokeWidth="0.3" strokeDasharray="3 3" />
         </g>
       ))}
-      {["Q1","Q2","Q3","Q4"].map((q, i) => (
+      {["Q1", "Q2", "Q3", "Q4"].map((q, i) => (
         <text key={q} x={58 + i * 68} y={140} textAnchor="middle" className="fill-[#9ca3af] text-[7px] font-medium">{q}</text>
       ))}
 
@@ -913,14 +912,17 @@ function Footer() {
           <span className="font-display text-[15px] font-semibold tracking-tight">DataViz</span>
           <span className="ml-2 text-sm text-soft">English in, charts out.</span>
         </div>
-        <div className="flex items-center gap-7 text-sm text-soft">
-          <a href="#" className="transition-colors hover:text-ink">
-            Docs
+        <div className="flex flex-wrap items-center gap-5 text-sm text-soft sm:gap-7">
+          <a href="https://venkateshraju.in" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink">
+            Portfolio
           </a>
-          <a href="#" className="transition-colors hover:text-ink">
+          <a href="https://blog.venkateshraju.in" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink">
+            Blog
+          </a>
+          <a href="https://github.com/venkateshraju04/dataviz" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink">
             GitHub
           </a>
-          <a href="#" className="transition-colors hover:text-ink">
+          <a href="mailto:me@venkateshraju.in" className="transition-colors hover:text-ink">
             Contact
           </a>
         </div>

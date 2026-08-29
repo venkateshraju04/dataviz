@@ -83,7 +83,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "DataViz turns plain-English questions into clean, shareable charts and graphs. No SQL, no code, no dashboard rabbit hole.",
       },
-      { name: "author", content: "DataViz" },
+      { name: "author", content: "Venkatesh Raju" },
+      { name: "creator", content: "Venkatesh Raju" },
       {
         property: "og:title",
         content: "DataViz — Describe your data in English. Get the chart.",
@@ -94,8 +95,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "DataViz turns plain-English questions into clean, shareable charts and graphs. No SQL, no code, no dashboard rabbit hole.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "DataViz" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@dataviz" },
+      { name: "twitter:creator", content: "@venkateshraju04" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
