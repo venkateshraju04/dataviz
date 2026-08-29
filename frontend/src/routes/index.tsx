@@ -58,16 +58,16 @@ function Header() {
           <a href="#features" className="transition-colors hover:text-ink">
             Features
           </a>
-          <a href="#pricing" className="transition-colors hover:text-ink">
-            Pricing
-          </a>
+          <Link to="/analyze" className="transition-colors hover:text-ink">
+            Dashboard
+          </Link>
         </nav>
-        <a
-          href="#pricing"
+        <Link
+          to="/analyze"
           className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
         >
           Start free
-        </a>
+        </Link>
       </div>
     </header>
   );
@@ -102,12 +102,12 @@ function Hero() {
             className="animate-rise mt-8 flex flex-wrap items-center gap-3"
             style={{ animationDelay: "280ms" }}
           >
-            <a
-              href="#pricing"
+            <Link
+              to="/analyze"
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white ring-1 ring-inset ring-accent/40 transition-colors hover:bg-accent/90"
             >
               Try it free
-            </a>
+            </Link>
             <a
               href="#how"
               className="rounded-md px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-ink/5"
@@ -332,17 +332,17 @@ function CtaBand() {
             Free to try with your own data. Upgrade when your team starts asking follow-ups all day.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#"
+            <Link
+              to="/analyze"
               className="rounded-md bg-ink px-6 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
             >
               Start free
-            </a>
+            </Link>
             <a
-              href="#"
+              href="#how"
               className="rounded-md px-6 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-ink/5"
             >
-              See pricing
+              See how it works
             </a>
           </div>
           <div className="mt-6 flex items-center justify-center gap-6 text-xs text-soft">
