@@ -1,0 +1,131 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * DataViz design system — Architectural minimal direction.
+ *
+ * Colors are kept as the exact hex values from the selected direction
+ * so the page renders precisely as designed.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--white);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--white);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-secondary: var(--line);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--line);
+  --color-muted-foreground: var(--soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--white);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.984 0.003 247.858);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--accent);
+
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-soft: var(--soft);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-white: var(--white);
+
+  --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-body: "Inter", ui-sans-serif, sans-serif;
+}
+
+:root {
+  --radius: 0.625rem;
+  --paper: #f7f7f4;
+  --ink: #16161a;
+  --soft: #6b6b75;
+  --line: #e6e6ea;
+  --accent: #3b6fe0;
+  --white: #ffffff;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+}
+
+/* Entrance & chart animations */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes growbar {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@utility animate-rise {
+  opacity: 0;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@utility animate-growbar {
+  transform-origin: bottom;
+  animation: growbar 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@utility animate-draw {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: draw 1.3s ease 0.3s forwards;
+}
+
+@utility animate-blink {
+  animation: blink 1.1s step-end infinite;
+}
