@@ -2,7 +2,7 @@
 
 **Describe your data in English. Get the chart.**
 
-**Live Demo:** [https://dataviz.venkateshraju.in/](https://dataviz.venkateshraju.in/)
+**Live:** [https://dataviz.venkateshraju.in/](https://dataviz.venkateshraju.in/)
 
 DataViz is an AI-powered analytics tool that turns plain-English questions into clean, shareable charts and graphs. No SQL, no query languages, and no complex dashboards to navigate. Upload your dataset, ask a question the way you would ask a colleague, and let the AI build the right visualization for you.
 
