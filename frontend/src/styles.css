@@ -121,8 +121,8 @@
 }
 
 @utility animate-draw {
-  stroke-dasharray: 320;
-  stroke-dashoffset: 320;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
   animation: draw 1.3s ease 0.3s forwards;
 }
 

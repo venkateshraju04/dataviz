@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -66,14 +67,67 @@ function Header() {
           to="/analyze"
           className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
         >
-          Start free
+          Get started
         </Link>
       </div>
     </header>
   );
 }
 
+/* ====================================================================== */
+/* Hero with rotating chart carousel                                      */
+/* ====================================================================== */
+
+const CHART_SLIDES = [
+  {
+    query: '"Monthly revenue by region for the last 12 months"',
+    title: "Revenue by region",
+    subtitle: "last 12 mo",
+    insight: "EMEA up 23% QoQ",
+    type: "bar" as const,
+  },
+  {
+    query: '"Show user growth trend week over week"',
+    title: "User growth",
+    subtitle: "weekly trend",
+    insight: "12% WoW growth",
+    type: "line" as const,
+  },
+  {
+    query: '"Breakdown of sales by product category"',
+    title: "Sales by category",
+    subtitle: "all time",
+    insight: "Top 3 = 68% share",
+    type: "donut" as const,
+  },
+  {
+    query: '"Correlation between ad spend and conversions"',
+    title: "Spend vs conversions",
+    subtitle: "Q3 data",
+    insight: "r² = 0.87",
+    type: "scatter" as const,
+  },
+  {
+    query: '"Compare quarterly performance across teams"',
+    title: "Team performance",
+    subtitle: "by quarter",
+    insight: "Eng leads +18%",
+    type: "area" as const,
+  },
+];
+
 function Hero() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((i) => (i + 1) % CHART_SLIDES.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const slide = CHART_SLIDES[activeIndex];
+
   return (
     <section className="border-b border-line">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-12 lg:gap-16 lg:py-28">
@@ -83,7 +137,7 @@ function Hero() {
             style={{ animationDelay: "50ms" }}
           >
             <span className="size-1.5 rounded-full bg-accent" />
-            Plain-English data, no queries
+            100% free — no account needed
           </div>
           <h1
             className="animate-rise mt-6 max-w-[20ch] font-display text-5xl font-semibold leading-tight tracking-tight text-balance lg:text-6xl"
@@ -106,7 +160,7 @@ function Hero() {
               to="/analyze"
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white ring-1 ring-inset ring-accent/40 transition-colors hover:bg-accent/90"
             >
-              Try it free
+              Get started
             </Link>
             <a
               href="#how"
@@ -117,11 +171,13 @@ function Hero() {
           </div>
         </div>
 
+        {/* ---- Rotating chart demo card ---- */}
         <div className="relative lg:col-span-6">
           <div
             className="animate-rise relative rounded-2xl bg-white ring-1 ring-black/5"
             style={{ animationDelay: "180ms" }}
           >
+            {/* Window chrome */}
             <div className="flex items-center justify-between px-5 pt-4">
               <span className="text-xs font-medium uppercase tracking-[0.14em] text-soft">Live demo</span>
               <span className="flex gap-1.5">
@@ -131,32 +187,70 @@ function Hero() {
               </span>
             </div>
 
+            {/* Query bar — changes with slide */}
             <div className="mx-5 mt-4 flex items-center gap-2 rounded-xl border border-line bg-paper/60 px-4 py-3 text-sm">
               <span className="shrink-0 font-display font-medium text-soft">You</span>
-              <span className="truncate text-ink/80">"Monthly revenue by region for the last 12 months"</span>
+              <span
+                key={activeIndex}
+                className="truncate text-ink/80 animate-rise"
+                style={{ animationDuration: "0.4s" }}
+              >
+                {slide.query}
+              </span>
               <span className="animate-blink font-medium text-accent">|</span>
             </div>
 
+            {/* Chart area */}
             <div className="mx-5 mt-5 pb-5">
               <div className="flex items-baseline justify-between">
-                <span className="font-display text-sm font-medium">Revenue by region</span>
-                <span className="text-xs text-soft">last 12 mo</span>
+                <span
+                  key={`title-${activeIndex}`}
+                  className="font-display text-sm font-medium animate-rise"
+                  style={{ animationDuration: "0.4s" }}
+                >
+                  {slide.title}
+                </span>
+                <span className="text-xs text-soft">{slide.subtitle}</span>
               </div>
-              <div className="mt-4 flex h-40 items-end gap-2.5">
-                <Bar height="42%" delay="350ms" opacity="25" />
-                <Bar height="55%" delay="420ms" opacity="35" />
-                <Bar height="48%" delay="490ms" opacity="45" />
-                <Bar height="68%" delay="560ms" opacity="60" />
-                <Bar height="62%" delay="630ms" opacity="75" />
-                <Bar height="88%" delay="700ms" opacity="100" />
+
+              {/* Chart visualization — cycles through types */}
+              <div className="mt-4 h-40 relative overflow-hidden">
+                <div
+                  key={`chart-${activeIndex}`}
+                  className="animate-rise h-full"
+                  style={{ animationDuration: "0.6s" }}
+                >
+                  {slide.type === "bar" && <BarChart />}
+                  {slide.type === "line" && <LineChart />}
+                  {slide.type === "donut" && <DonutChart />}
+                  {slide.type === "scatter" && <ScatterChart />}
+                  {slide.type === "area" && <AreaChart />}
+                </div>
               </div>
-              <div className="mt-3 flex items-center gap-2 text-xs text-soft">
-                <span className="size-2 rounded-sm bg-accent" />
-                Generated in 0.8s — tap any bar to drill in
+
+              {/* Slide indicators */}
+              <div className="mt-3 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs text-soft">
+                  <span className="size-2 rounded-sm bg-accent" />
+                  Generated in 0.8s
+                </div>
+                <div className="flex gap-1.5">
+                  {CHART_SLIDES.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveIndex(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === activeIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-soft/40"
+                      }`}
+                      aria-label={`View chart ${i + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Floating insight badge */}
           <div
             className="animate-rise absolute -bottom-5 -left-4 hidden rounded-xl bg-white px-4 py-3 ring-1 ring-black/5 sm:block"
             style={{ animationDelay: "500ms" }}
@@ -167,7 +261,13 @@ function Hero() {
               </span>
               <div>
                 <div className="text-[11px] text-soft">Insight</div>
-                <div className="text-sm font-medium">EMEA up 23% QoQ</div>
+                <div
+                  key={`insight-${activeIndex}`}
+                  className="text-sm font-medium animate-rise"
+                  style={{ animationDuration: "0.3s" }}
+                >
+                  {slide.insight}
+                </div>
               </div>
             </div>
           </div>
@@ -177,14 +277,255 @@ function Hero() {
   );
 }
 
-function Bar({ height, delay, opacity }: { height: string; delay: string; opacity: string }) {
+/* ====================================================================== */
+/* SVG Chart components for the carousel                                  */
+/* ====================================================================== */
+
+function BarChart() {
+  const bars = [
+    { h: 42, o: 0.35 }, { h: 58, o: 0.45 }, { h: 50, o: 0.55 },
+    { h: 72, o: 0.7 }, { h: 65, o: 0.8 }, { h: 92, o: 1 },
+  ];
   return (
-    <div
-      className="animate-growbar flex-1 rounded-t-sm bg-accent"
-      style={{ height, animationDelay: delay, opacity: Number(opacity) / 100 }}
-    />
+    <div className="flex h-full items-end gap-2.5">
+      {bars.map((bar, i) => (
+        <div
+          key={i}
+          className="flex-1 rounded-t-md bg-accent animate-growbar"
+          style={{
+            height: `${bar.h}%`,
+            opacity: bar.o,
+            animationDelay: `${i * 70}ms`,
+          }}
+        />
+      ))}
+    </div>
   );
 }
+
+function LineChart() {
+  return (
+    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
+      {/* Grid lines */}
+      {[0, 35, 70, 105, 140].map((y) => (
+        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+      ))}
+      {/* Area fill */}
+      <path
+        d="M0,120 L47,95 L94,100 L141,60 L188,45 L235,55 L280,20 L280,140 L0,140Z"
+        fill="url(#lineGrad)"
+        className="animate-rise"
+        style={{ animationDuration: "0.8s" }}
+      />
+      {/* Line */}
+      <polyline
+        points="0,120 47,95 94,100 141,60 188,45 235,55 280,20"
+        stroke="var(--accent)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        className="animate-draw"
+      />
+      {/* Data points */}
+      {[
+        [0, 120], [47, 95], [94, 100], [141, 60], [188, 45], [235, 55], [280, 20],
+      ].map(([cx, cy], i) => (
+        <circle
+          key={i}
+          cx={cx}
+          cy={cy}
+          r="3.5"
+          fill="white"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          className="animate-rise"
+          style={{ animationDelay: `${300 + i * 80}ms` }}
+        />
+      ))}
+      <defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.01" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+function DonutChart() {
+  // Segments: 35%, 25%, 20%, 12%, 8%
+  const segments = [
+    { pct: 35, color: "var(--accent)", opacity: 1 },
+    { pct: 25, color: "var(--accent)", opacity: 0.7 },
+    { pct: 20, color: "var(--accent)", opacity: 0.5 },
+    { pct: 12, color: "var(--accent)", opacity: 0.35 },
+    { pct: 8, color: "var(--accent)", opacity: 0.2 },
+  ];
+
+  const radius = 52;
+  const cx = 70;
+  const cy = 70;
+  const circumference = 2 * Math.PI * radius;
+  let cumulative = 0;
+
+  return (
+    <div className="flex h-full items-center justify-center gap-8">
+      <svg className="size-[130px] shrink-0" viewBox="0 0 140 140">
+        {segments.map((seg, i) => {
+          const dashLen = (seg.pct / 100) * circumference;
+          const dashGap = circumference - dashLen;
+          const offset = -((cumulative / 100) * circumference);
+          cumulative += seg.pct;
+
+          return (
+            <circle
+              key={i}
+              cx={cx}
+              cy={cy}
+              r={radius}
+              fill="none"
+              stroke={seg.color}
+              strokeOpacity={seg.opacity}
+              strokeWidth="20"
+              strokeDasharray={`${dashLen} ${dashGap}`}
+              strokeDashoffset={offset}
+              strokeLinecap="butt"
+              transform={`rotate(-90 ${cx} ${cy})`}
+              className="animate-rise"
+              style={{ animationDelay: `${i * 100}ms` }}
+            />
+          );
+        })}
+        <text x={cx} y={cy - 4} textAnchor="middle" className="fill-ink font-display text-[18px] font-semibold">
+          $142k
+        </text>
+        <text x={cx} y={cy + 12} textAnchor="middle" className="fill-soft text-[9px]">
+          total
+        </text>
+      </svg>
+      {/* Legend */}
+      <div className="flex flex-col gap-2">
+        {[
+          { label: "Electronics", pct: "35%" },
+          { label: "Apparel", pct: "25%" },
+          { label: "Food", pct: "20%" },
+          { label: "Home", pct: "12%" },
+          { label: "Other", pct: "8%" },
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-2 text-xs animate-rise" style={{ animationDelay: `${200 + i * 60}ms` }}>
+            <span
+              className="size-2.5 rounded-sm bg-accent"
+              style={{ opacity: [1, 0.7, 0.5, 0.35, 0.2][i] }}
+            />
+            <span className="text-soft">{item.label}</span>
+            <span className="ml-auto font-medium text-ink tabular-nums">{item.pct}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ScatterChart() {
+  const points = [
+    [20, 110], [40, 95], [55, 88], [70, 75], [85, 82],
+    [110, 60], [130, 55], [150, 48], [175, 38], [195, 42],
+    [210, 30], [230, 25], [250, 18], [60, 100], [120, 65],
+    [160, 52], [200, 35], [90, 70], [140, 58], [180, 40],
+  ];
+  return (
+    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
+      {/* Grid */}
+      {[0, 35, 70, 105, 140].map((y) => (
+        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+      ))}
+      {/* Trend line */}
+      <line
+        x1="10" y1="115" x2="260" y2="15"
+        stroke="var(--accent)"
+        strokeWidth="1.5"
+        strokeDasharray="4 4"
+        opacity="0.4"
+        className="animate-rise"
+        style={{ animationDelay: "200ms" }}
+      />
+      {/* Points */}
+      {points.map(([cx, cy], i) => (
+        <circle
+          key={i}
+          cx={cx}
+          cy={cy}
+          r="4"
+          fill="var(--accent)"
+          opacity={0.3 + (i / points.length) * 0.7}
+          className="animate-rise"
+          style={{ animationDelay: `${80 + i * 40}ms` }}
+        />
+      ))}
+    </svg>
+  );
+}
+
+function AreaChart() {
+  return (
+    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
+      {/* Grid */}
+      {[0, 35, 70, 105, 140].map((y) => (
+        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+      ))}
+      {/* Area 1 — Team A */}
+      <path
+        d="M0,130 L56,110 L112,95 L168,70 L224,55 L280,40 L280,140 L0,140Z"
+        fill="var(--accent)"
+        fillOpacity="0.15"
+        className="animate-rise"
+        style={{ animationDuration: "0.6s" }}
+      />
+      <polyline
+        points="0,130 56,110 112,95 168,70 224,55 280,40"
+        stroke="var(--accent)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        className="animate-draw"
+      />
+      {/* Area 2 — Team B */}
+      <path
+        d="M0,135 L56,125 L112,120 L168,100 L224,85 L280,75 L280,140 L0,140Z"
+        fill="var(--accent)"
+        fillOpacity="0.08"
+        className="animate-rise"
+        style={{ animationDuration: "0.8s", animationDelay: "100ms" }}
+      />
+      <polyline
+        points="0,135 56,125 112,120 168,100 224,85 280,75"
+        stroke="var(--accent)"
+        strokeWidth="1.5"
+        strokeOpacity="0.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="4 3"
+        fill="none"
+        className="animate-draw"
+        style={{ animationDelay: "200ms" }}
+      />
+      {/* Legend */}
+      <g className="animate-rise" style={{ animationDelay: "400ms" }}>
+        <rect x="190" y="6" width="86" height="28" rx="6" fill="white" fillOpacity="0.9" stroke="var(--line)" strokeWidth="0.5" />
+        <line x1="196" y1="16" x2="208" y2="16" stroke="var(--accent)" strokeWidth="2" />
+        <text x="212" y="19" className="fill-ink text-[8px]">Team A</text>
+        <line x1="196" y1="26" x2="208" y2="26" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="3 2" strokeOpacity="0.5" />
+        <text x="212" y="29" className="fill-soft text-[8px]">Team B</text>
+      </g>
+    </svg>
+  );
+}
+
+/* ====================================================================== */
+/* How it works                                                           */
+/* ====================================================================== */
 
 function HowItWorks() {
   return (
@@ -221,6 +562,10 @@ function StepCard({ number, title, children }: { number: string; title: string; 
     </div>
   );
 }
+
+/* ====================================================================== */
+/* Features                                                               */
+/* ====================================================================== */
 
 function Features() {
   return (
@@ -276,11 +621,16 @@ function Features() {
                 <span>Q3 trend</span>
               </div>
               <div className="mt-4 flex h-24 items-end gap-2">
-                <Bar height="80%" delay="400ms" opacity="100" />
-                <Bar height="64%" delay="480ms" opacity="80" />
-                <Bar height="52%" delay="560ms" opacity="65" />
-                <Bar height="38%" delay="640ms" opacity="50" />
-                <Bar height="26%" delay="720ms" opacity="40" />
+                {[
+                  { h: "80%", o: 1 }, { h: "64%", o: 0.8 }, { h: "52%", o: 0.65 },
+                  { h: "38%", o: 0.5 }, { h: "26%", o: 0.4 },
+                ].map((bar, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 rounded-t-sm bg-accent animate-growbar"
+                    style={{ height: bar.h, opacity: bar.o, animationDelay: `${400 + i * 80}ms` }}
+                  />
+                ))}
               </div>
               <div className="mt-3 text-xs text-paper/40">Falling quarter over quarter</div>
             </div>
@@ -320,23 +670,27 @@ function BenefitCard({
   );
 }
 
+/* ====================================================================== */
+/* CTA Band — no pricing, fully free                                      */
+/* ====================================================================== */
+
 function CtaBand() {
   return (
-    <section id="pricing" className="border-b border-line">
+    <section id="cta" className="border-b border-line">
       <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div className="rounded-2xl bg-accent/5 p-8 text-center ring-1 ring-accent/15 lg:p-12">
           <h2 className="mx-auto max-w-[24ch] font-display text-3xl font-semibold leading-tight tracking-tight text-balance">
             Stop asking for charts. Start answering.
           </h2>
           <p className="mx-auto mt-4 max-w-[44ch] text-pretty text-soft">
-            Free to try with your own data. Upgrade when your team starts asking follow-ups all day.
+            Completely free, forever. Upload your data, ask a question, and get a chart in seconds.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/analyze"
               className="rounded-md bg-ink px-6 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
             >
-              Start free
+              Get started
             </Link>
             <a
               href="#how"
@@ -346,17 +700,21 @@ function CtaBand() {
             </a>
           </div>
           <div className="mt-6 flex items-center justify-center gap-6 text-xs text-soft">
-            <span>No credit card</span>
+            <span>100% free</span>
             <span className="size-1 rounded-full bg-line" />
-            <span>Bring your own data</span>
+            <span>No sign-up required</span>
             <span className="size-1 rounded-full bg-line" />
-            <span>Cancel anytime</span>
+            <span>Unlimited analyses</span>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+/* ====================================================================== */
+/* Footer                                                                  */
+/* ====================================================================== */
 
 function Footer() {
   return (
@@ -374,7 +732,7 @@ function Footer() {
             Docs
           </a>
           <a href="#" className="transition-colors hover:text-ink">
-            Security
+            GitHub
           </a>
           <a href="#" className="transition-colors hover:text-ink">
             Contact
