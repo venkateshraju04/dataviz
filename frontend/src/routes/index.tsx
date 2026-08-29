@@ -278,100 +278,242 @@ function Hero() {
 }
 
 /* ====================================================================== */
-/* SVG Chart components for the carousel                                  */
+/* SVG Chart components for the carousel — premium versions               */
 /* ====================================================================== */
 
+const COLORS = {
+  blue: "#3b6fe0",
+  indigo: "#6366f1",
+  violet: "#8b5cf6",
+  emerald: "#10b981",
+  amber: "#f59e0b",
+  rose: "#f43f5e",
+  cyan: "#06b6d4",
+  slate: "#94a3b8",
+};
+
 function BarChart() {
-  const bars = [
-    { h: 42, o: 0.35 }, { h: 58, o: 0.45 }, { h: 50, o: 0.55 },
-    { h: 72, o: 0.7 }, { h: 65, o: 0.8 }, { h: 92, o: 1 },
+  const data = [
+    { label: "NA", v1: 68, v2: 42, },
+    { label: "EMEA", v1: 85, v2: 55 },
+    { label: "APAC", v1: 52, v2: 38 },
+    { label: "LATAM", v1: 45, v2: 30 },
+    { label: "MEA", v1: 72, v2: 48 },
+    { label: "ANZ", v1: 92, v2: 60 },
   ];
   return (
-    <div className="flex h-full items-end gap-2.5">
-      {bars.map((bar, i) => (
-        <div
-          key={i}
-          className="flex-1 rounded-t-md bg-accent animate-growbar"
-          style={{
-            height: `${bar.h}%`,
-            opacity: bar.o,
-            animationDelay: `${i * 70}ms`,
-          }}
-        />
+    <svg className="h-full w-full" viewBox="0 0 300 160" fill="none">
+      <defs>
+        <linearGradient id="barGrad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.blue} />
+          <stop offset="100%" stopColor={COLORS.indigo} />
+        </linearGradient>
+        <linearGradient id="barGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.cyan} stopOpacity="0.6" />
+          <stop offset="100%" stopColor={COLORS.blue} stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      {/* Y-axis labels + grid lines */}
+      {[
+        { y: 20, label: "$30k" },
+        { y: 55, label: "$20k" },
+        { y: 90, label: "$10k" },
+        { y: 125, label: "$0" },
+      ].map((g) => (
+        <g key={g.y}>
+          <text x="2" y={g.y + 3} className="fill-[#9ca3af] text-[7px]">{g.label}</text>
+          <line x1="32" y1={g.y} x2="296" y2={g.y} stroke="#e5e7eb" strokeWidth="0.5" strokeDasharray="3 3" />
+        </g>
       ))}
-    </div>
+      {/* Bars */}
+      {data.map((d, i) => {
+        const groupX = 40 + i * 44;
+        const h1 = (d.v1 / 100) * 105;
+        const h2 = (d.v2 / 100) * 105;
+        return (
+          <g key={i} className="animate-rise" style={{ animationDelay: `${i * 80}ms` }}>
+            {/* Primary bar */}
+            <rect
+              x={groupX}
+              y={125 - h1}
+              width="16"
+              height={h1}
+              rx="3"
+              fill="url(#barGrad1)"
+            />
+            {/* Glossy highlight */}
+            <rect
+              x={groupX}
+              y={125 - h1}
+              width="6"
+              height={h1}
+              rx="3"
+              fill="white"
+              fillOpacity="0.15"
+            />
+            {/* Secondary bar */}
+            <rect
+              x={groupX + 18}
+              y={125 - h2}
+              width="16"
+              height={h2}
+              rx="3"
+              fill="url(#barGrad2)"
+            />
+            {/* Value on top of primary */}
+            <text
+              x={groupX + 8}
+              y={125 - h1 - 4}
+              textAnchor="middle"
+              className="fill-[#6b7280] text-[6px] font-medium"
+            >
+              ${Math.round(d.v1 * 0.32)}k
+            </text>
+            {/* X-axis label */}
+            <text
+              x={groupX + 17}
+              y={140}
+              textAnchor="middle"
+              className="fill-[#9ca3af] text-[7px]"
+            >
+              {d.label}
+            </text>
+          </g>
+        );
+      })}
+      {/* Legend */}
+      <g className="animate-rise" style={{ animationDelay: "500ms" }}>
+        <circle cx="225" cy="150" r="3" fill="url(#barGrad1)" />
+        <text x="231" y="153" className="fill-[#6b7280] text-[7px]">This year</text>
+        <circle cx="268" cy="150" r="3" fill={COLORS.cyan} fillOpacity="0.5" />
+        <text x="274" y="153" className="fill-[#6b7280] text-[7px]">Last year</text>
+      </g>
+    </svg>
   );
 }
 
 function LineChart() {
   return (
-    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
-      {/* Grid lines */}
-      {[0, 35, 70, 105, 140].map((y) => (
-        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+    <svg className="h-full w-full" viewBox="0 0 300 160" fill="none">
+      <defs>
+        <linearGradient id="lineAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.blue} stopOpacity="0.2" />
+          <stop offset="60%" stopColor={COLORS.blue} stopOpacity="0.05" />
+          <stop offset="100%" stopColor={COLORS.blue} stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="lineAreaGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.emerald} stopOpacity="0.12" />
+          <stop offset="100%" stopColor={COLORS.emerald} stopOpacity="0" />
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      {/* Y-axis */}
+      {[
+        { y: 15, l: "5k" }, { y: 50, l: "3k" }, { y: 85, l: "1k" }, { y: 120, l: "0" },
+      ].map((g) => (
+        <g key={g.y}>
+          <text x="4" y={g.y + 3} className="fill-[#9ca3af] text-[7px]">{g.l}</text>
+          <line x1="25" y1={g.y} x2="295" y2={g.y} stroke="#e5e7eb" strokeWidth="0.4" strokeDasharray="3 3" />
+        </g>
       ))}
-      {/* Area fill */}
+
+      {/* X-axis labels */}
+      {["Jan","Feb","Mar","Apr","May","Jun","Jul"].map((m, i) => (
+        <text key={m} x={30 + i * 42} y={138} textAnchor="middle" className="fill-[#9ca3af] text-[7px]">{m}</text>
+      ))}
+
+      {/* Line 2 (secondary — Users) */}
       <path
-        d="M0,120 L47,95 L94,100 L141,60 L188,45 L235,55 L280,20 L280,140 L0,140Z"
-        fill="url(#lineGrad)"
+        d="M30,95 C55,88 72,82 114,75 C156,68 198,62 240,50 C262,44 282,48 290,55"
+        fill="none"
+        stroke={COLORS.emerald}
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.6"
+        className="animate-draw"
+        style={{ animationDelay: "200ms" }}
+      />
+      <path
+        d="M30,95 C55,88 72,82 114,75 C156,68 198,62 240,50 C262,44 282,48 290,55 L290,125 L30,125Z"
+        fill="url(#lineAreaGrad2)"
+        className="animate-rise"
+        style={{ animationDuration: "0.8s", animationDelay: "150ms" }}
+      />
+
+      {/* Line 1 (primary — Revenue) */}
+      <path
+        d="M30,100 C55,90 72,85 114,55 C156,30 198,28 240,22 C262,18 282,20 290,15"
+        fill="none"
+        stroke={COLORS.blue}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        className="animate-draw"
+        filter="url(#glow)"
+      />
+      <path
+        d="M30,100 C55,90 72,85 114,55 C156,30 198,28 240,22 C262,18 282,20 290,15 L290,125 L30,125Z"
+        fill="url(#lineAreaGrad)"
         className="animate-rise"
         style={{ animationDuration: "0.8s" }}
       />
-      {/* Line */}
-      <polyline
-        points="0,120 47,95 94,100 141,60 188,45 235,55 280,20"
-        stroke="var(--accent)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        className="animate-draw"
-      />
-      {/* Data points */}
+
+      {/* Data points on primary line */}
       {[
-        [0, 120], [47, 95], [94, 100], [141, 60], [188, 45], [235, 55], [280, 20],
-      ].map(([cx, cy], i) => (
-        <circle
-          key={i}
-          cx={cx}
-          cy={cy}
-          r="3.5"
-          fill="white"
-          stroke="var(--accent)"
-          strokeWidth="2"
-          className="animate-rise"
-          style={{ animationDelay: `${300 + i * 80}ms` }}
-        />
+        [30,100],[72,85],[114,55],[156,30],[198,28],[240,22],[290,15],
+      ].map(([cx,cy], i) => (
+        <g key={i} className="animate-rise" style={{ animationDelay: `${300 + i * 60}ms` }}>
+          <circle cx={cx} cy={cy} r="5" fill={COLORS.blue} fillOpacity="0.15" />
+          <circle cx={cx} cy={cy} r="3" fill="white" stroke={COLORS.blue} strokeWidth="1.5" />
+        </g>
       ))}
-      <defs>
-        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.01" />
-        </linearGradient>
-      </defs>
+
+      {/* Tooltip on highest point */}
+      <g className="animate-rise" style={{ animationDelay: "600ms" }}>
+        <rect x="251" y="1" width="40" height="16" rx="4" fill={COLORS.blue} />
+        <text x="271" y="12" textAnchor="middle" className="fill-white text-[7px] font-medium">4,832</text>
+      </g>
+
+      {/* Legend */}
+      <g className="animate-rise" style={{ animationDelay: "500ms" }}>
+        <line x1="200" y1="150" x2="212" y2="150" stroke={COLORS.blue} strokeWidth="2.5" strokeLinecap="round" />
+        <text x="216" y="153" className="fill-[#6b7280] text-[7px]">Revenue</text>
+        <line x1="250" y1="150" x2="262" y2="150" stroke={COLORS.emerald} strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+        <text x="266" y="153" className="fill-[#6b7280] text-[7px]">Users</text>
+      </g>
     </svg>
   );
 }
 
 function DonutChart() {
-  // Segments: 35%, 25%, 20%, 12%, 8%
   const segments = [
-    { pct: 35, color: "var(--accent)", opacity: 1 },
-    { pct: 25, color: "var(--accent)", opacity: 0.7 },
-    { pct: 20, color: "var(--accent)", opacity: 0.5 },
-    { pct: 12, color: "var(--accent)", opacity: 0.35 },
-    { pct: 8, color: "var(--accent)", opacity: 0.2 },
+    { pct: 35, color: COLORS.blue, label: "Electronics", value: "$49.7k" },
+    { pct: 25, color: COLORS.violet, label: "Apparel", value: "$35.5k" },
+    { pct: 20, color: COLORS.emerald, label: "Food", value: "$28.4k" },
+    { pct: 12, color: COLORS.amber, label: "Home", value: "$17.0k" },
+    { pct: 8, color: COLORS.rose, label: "Other", value: "$11.4k" },
   ];
 
   const radius = 52;
-  const cx = 70;
-  const cy = 70;
+  const centerX = 70;
+  const centerY = 70;
   const circumference = 2 * Math.PI * radius;
   let cumulative = 0;
 
   return (
-    <div className="flex h-full items-center justify-center gap-8">
+    <div className="flex h-full items-center justify-center gap-6">
       <svg className="size-[130px] shrink-0" viewBox="0 0 140 140">
+        <defs>
+          <filter id="donutShadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.08" />
+          </filter>
+        </defs>
+        {/* Background track */}
+        <circle cx={centerX} cy={centerY} r={radius} fill="none" stroke="#f1f5f9" strokeWidth="22" />
+        {/* Segments */}
         {segments.map((seg, i) => {
           const dashLen = (seg.pct / 100) * circumference;
           const dashGap = circumference - dashLen;
@@ -381,45 +523,42 @@ function DonutChart() {
           return (
             <circle
               key={i}
-              cx={cx}
-              cy={cy}
+              cx={centerX}
+              cy={centerY}
               r={radius}
               fill="none"
               stroke={seg.color}
-              strokeOpacity={seg.opacity}
               strokeWidth="20"
               strokeDasharray={`${dashLen} ${dashGap}`}
               strokeDashoffset={offset}
-              strokeLinecap="butt"
-              transform={`rotate(-90 ${cx} ${cy})`}
+              strokeLinecap="round"
+              transform={`rotate(-90 ${centerX} ${centerY})`}
+              filter="url(#donutShadow)"
               className="animate-rise"
               style={{ animationDelay: `${i * 100}ms` }}
             />
           );
         })}
-        <text x={cx} y={cy - 4} textAnchor="middle" className="fill-ink font-display text-[18px] font-semibold">
+        {/* Center text */}
+        <text x={centerX} y={centerY - 6} textAnchor="middle" className="fill-[#16161a] font-display text-[17px] font-bold">
           $142k
         </text>
-        <text x={cx} y={cy + 12} textAnchor="middle" className="fill-soft text-[9px]">
-          total
+        <text x={centerX} y={centerY + 9} textAnchor="middle" className="fill-[#9ca3af] text-[8px]">
+          total revenue
         </text>
       </svg>
-      {/* Legend */}
-      <div className="flex flex-col gap-2">
-        {[
-          { label: "Electronics", pct: "35%" },
-          { label: "Apparel", pct: "25%" },
-          { label: "Food", pct: "20%" },
-          { label: "Home", pct: "12%" },
-          { label: "Other", pct: "8%" },
-        ].map((item, i) => (
-          <div key={i} className="flex items-center gap-2 text-xs animate-rise" style={{ animationDelay: `${200 + i * 60}ms` }}>
-            <span
-              className="size-2.5 rounded-sm bg-accent"
-              style={{ opacity: [1, 0.7, 0.5, 0.35, 0.2][i] }}
-            />
-            <span className="text-soft">{item.label}</span>
-            <span className="ml-auto font-medium text-ink tabular-nums">{item.pct}</span>
+
+      {/* Legend with colored dots + values */}
+      <div className="flex flex-col gap-1.5">
+        {segments.map((item, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2.5 text-xs animate-rise"
+            style={{ animationDelay: `${200 + i * 60}ms` }}
+          >
+            <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+            <span className="text-[#6b7280] min-w-[60px]">{item.label}</span>
+            <span className="font-medium text-[#16161a] tabular-nums text-[11px]">{item.value}</span>
           </div>
         ))}
       </div>
@@ -428,96 +567,181 @@ function DonutChart() {
 }
 
 function ScatterChart() {
-  const points = [
-    [20, 110], [40, 95], [55, 88], [70, 75], [85, 82],
-    [110, 60], [130, 55], [150, 48], [175, 38], [195, 42],
-    [210, 30], [230, 25], [250, 18], [60, 100], [120, 65],
-    [160, 52], [200, 35], [90, 70], [140, 58], [180, 40],
+  const clusters = [
+    { points: [[25,108],[38,96],[50,100],[42,112],[55,92],[32,104]], color: COLORS.blue, label: "Organic" },
+    { points: [[80,78],[95,65],[110,72],[100,82],[115,60],[90,75]], color: COLORS.violet, label: "Paid" },
+    { points: [[145,50],[160,42],[175,48],[155,55],[170,38],[180,45]], color: COLORS.emerald, label: "Social" },
+    { points: [[210,28],[225,22],[240,30],[220,35],[250,18],[235,25]], color: COLORS.amber, label: "Email" },
   ];
+
   return (
-    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
-      {/* Grid */}
-      {[0, 35, 70, 105, 140].map((y) => (
-        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+    <svg className="h-full w-full" viewBox="0 0 300 160" fill="none">
+      <defs>
+        {Object.entries(COLORS).map(([key, color]) => (
+          <radialGradient key={key} id={`scatter-${key}`}>
+            <stop offset="0%" stopColor={color} stopOpacity="0.8" />
+            <stop offset="100%" stopColor={color} stopOpacity="0.2" />
+          </radialGradient>
+        ))}
+      </defs>
+
+      {/* Axes */}
+      <line x1="25" y1="125" x2="290" y2="125" stroke="#e5e7eb" strokeWidth="0.8" />
+      <line x1="25" y1="10" x2="25" y2="125" stroke="#e5e7eb" strokeWidth="0.8" />
+
+      {/* Y-axis labels */}
+      {[{ y: 20, l: "High" }, { y: 70, l: "Med" }, { y: 120, l: "Low" }].map((g) => (
+        <text key={g.y} x="4" y={g.y + 3} className="fill-[#9ca3af] text-[6px]">{g.l}</text>
       ))}
+      {/* X-axis labels */}
+      {["$0","$2k","$5k","$10k","$15k"].map((l, i) => (
+        <text key={i} x={35 + i * 62} y={140} textAnchor="middle" className="fill-[#9ca3af] text-[6px]">{l}</text>
+      ))}
+      {/* Grid */}
+      {[35, 70, 105].map((y) => (
+        <line key={y} x1="25" y1={y} x2="290" y2={y} stroke="#e5e7eb" strokeWidth="0.3" strokeDasharray="3 3" />
+      ))}
+
       {/* Trend line */}
       <line
-        x1="10" y1="115" x2="260" y2="15"
-        stroke="var(--accent)"
-        strokeWidth="1.5"
-        strokeDasharray="4 4"
-        opacity="0.4"
+        x1="30" y1="115" x2="260" y2="12"
+        stroke={COLORS.blue}
+        strokeWidth="1"
+        strokeDasharray="5 4"
+        opacity="0.25"
         className="animate-rise"
-        style={{ animationDelay: "200ms" }}
+        style={{ animationDelay: "300ms" }}
       />
-      {/* Points */}
-      {points.map(([cx, cy], i) => (
-        <circle
-          key={i}
-          cx={cx}
-          cy={cy}
-          r="4"
-          fill="var(--accent)"
-          opacity={0.3 + (i / points.length) * 0.7}
-          className="animate-rise"
-          style={{ animationDelay: `${80 + i * 40}ms` }}
-        />
-      ))}
+
+      {/* Scatter points by cluster */}
+      {clusters.map((cluster, ci) =>
+        cluster.points.map(([cx, cy], pi) => {
+          const size = 3.5 + Math.random() * 3;
+          return (
+            <circle
+              key={`${ci}-${pi}`}
+              cx={cx}
+              cy={cy}
+              r={size}
+              fill={cluster.color}
+              fillOpacity={0.6}
+              stroke={cluster.color}
+              strokeWidth="0.5"
+              strokeOpacity="0.3"
+              className="animate-rise"
+              style={{ animationDelay: `${(ci * 6 + pi) * 30}ms` }}
+            />
+          );
+        })
+      )}
+
+      {/* Legend */}
+      <g className="animate-rise" style={{ animationDelay: "500ms" }}>
+        {clusters.map((c, i) => (
+          <g key={i}>
+            <circle cx={120 + i * 48} cy={155} r="2.5" fill={c.color} />
+            <text x={125 + i * 48} y="157.5" className="fill-[#6b7280] text-[6.5px]">{c.label}</text>
+          </g>
+        ))}
+      </g>
     </svg>
   );
 }
 
 function AreaChart() {
   return (
-    <svg className="h-full w-full" viewBox="0 0 280 140" fill="none" preserveAspectRatio="none">
-      {/* Grid */}
-      {[0, 35, 70, 105, 140].map((y) => (
-        <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="var(--line)" strokeWidth="0.5" />
+    <svg className="h-full w-full" viewBox="0 0 300 160" fill="none">
+      <defs>
+        <linearGradient id="areaGrad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.blue} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={COLORS.blue} stopOpacity="0.02" />
+        </linearGradient>
+        <linearGradient id="areaGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.violet} stopOpacity="0.2" />
+          <stop offset="100%" stopColor={COLORS.violet} stopOpacity="0.02" />
+        </linearGradient>
+        <linearGradient id="areaGrad3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={COLORS.emerald} stopOpacity="0.15" />
+          <stop offset="100%" stopColor={COLORS.emerald} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+
+      {/* Axis + grid */}
+      {[{ y: 15, l: "400" },{ y: 45, l: "300" },{ y: 75, l: "200" },{ y: 105, l: "100" },{ y: 125, l: "0" }].map((g) => (
+        <g key={g.y}>
+          <text x="2" y={g.y + 3} className="fill-[#9ca3af] text-[6px]">{g.l}</text>
+          <line x1="25" y1={g.y} x2="295" y2={g.y} stroke="#e5e7eb" strokeWidth="0.3" strokeDasharray="3 3" />
+        </g>
       ))}
-      {/* Area 1 — Team A */}
+      {["Q1","Q2","Q3","Q4"].map((q, i) => (
+        <text key={q} x={58 + i * 68} y={140} textAnchor="middle" className="fill-[#9ca3af] text-[7px] font-medium">{q}</text>
+      ))}
+
+      {/* Area 3 — Marketing (bottom) */}
       <path
-        d="M0,130 L56,110 L112,95 L168,70 L224,55 L280,40 L280,140 L0,140Z"
-        fill="var(--accent)"
-        fillOpacity="0.15"
+        d="M30,120 C60,118 100,115 160,105 C220,95 260,88 290,82 L290,125 L30,125Z"
+        fill="url(#areaGrad3)"
         className="animate-rise"
-        style={{ animationDuration: "0.6s" }}
+        style={{ animationDuration: "0.7s", animationDelay: "200ms" }}
       />
-      <polyline
-        points="0,130 56,110 112,95 168,70 224,55 280,40"
-        stroke="var(--accent)"
+      <path
+        d="M30,120 C60,118 100,115 160,105 C220,95 260,88 290,82"
+        fill="none"
+        stroke={COLORS.emerald}
         strokeWidth="2"
         strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
         className="animate-draw"
+        style={{ animationDelay: "300ms" }}
       />
-      {/* Area 2 — Team B */}
+
+      {/* Area 2 — Sales (middle) */}
       <path
-        d="M0,135 L56,125 L112,120 L168,100 L224,85 L280,75 L280,140 L0,140Z"
-        fill="var(--accent)"
-        fillOpacity="0.08"
+        d="M30,110 C60,102 100,90 160,72 C220,55 260,52 290,48 L290,125 L30,125Z"
+        fill="url(#areaGrad2)"
         className="animate-rise"
-        style={{ animationDuration: "0.8s", animationDelay: "100ms" }}
+        style={{ animationDuration: "0.7s", animationDelay: "100ms" }}
       />
-      <polyline
-        points="0,135 56,125 112,120 168,100 224,85 280,75"
-        stroke="var(--accent)"
-        strokeWidth="1.5"
-        strokeOpacity="0.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray="4 3"
+      <path
+        d="M30,110 C60,102 100,90 160,72 C220,55 260,52 290,48"
         fill="none"
+        stroke={COLORS.violet}
+        strokeWidth="2"
+        strokeLinecap="round"
         className="animate-draw"
         style={{ animationDelay: "200ms" }}
       />
+
+      {/* Area 1 — Engineering (top) */}
+      <path
+        d="M30,95 C60,85 100,65 160,42 C220,22 260,18 290,15 L290,125 L30,125Z"
+        fill="url(#areaGrad1)"
+        className="animate-rise"
+        style={{ animationDuration: "0.7s" }}
+      />
+      <path
+        d="M30,95 C60,85 100,65 160,42 C220,22 260,18 290,15"
+        fill="none"
+        stroke={COLORS.blue}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        className="animate-draw"
+      />
+
+      {/* Data point highlight */}
+      <g className="animate-rise" style={{ animationDelay: "500ms" }}>
+        <circle cx="290" cy="15" r="4" fill="white" stroke={COLORS.blue} strokeWidth="1.5" />
+        <rect x="258" y="2" width="28" height="13" rx="3" fill={COLORS.blue} />
+        <text x="272" y="11.5" textAnchor="middle" className="fill-white text-[6.5px] font-medium">412</text>
+      </g>
+
       {/* Legend */}
-      <g className="animate-rise" style={{ animationDelay: "400ms" }}>
-        <rect x="190" y="6" width="86" height="28" rx="6" fill="white" fillOpacity="0.9" stroke="var(--line)" strokeWidth="0.5" />
-        <line x1="196" y1="16" x2="208" y2="16" stroke="var(--accent)" strokeWidth="2" />
-        <text x="212" y="19" className="fill-ink text-[8px]">Team A</text>
-        <line x1="196" y1="26" x2="208" y2="26" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="3 2" strokeOpacity="0.5" />
-        <text x="212" y="29" className="fill-soft text-[8px]">Team B</text>
+      <g className="animate-rise" style={{ animationDelay: "600ms" }}>
+        <line x1="160" y1="152" x2="172" y2="152" stroke={COLORS.blue} strokeWidth="2.5" strokeLinecap="round" />
+        <text x="175" y="155" className="fill-[#6b7280] text-[7px]">Eng</text>
+        <line x1="196" y1="152" x2="208" y2="152" stroke={COLORS.violet} strokeWidth="2" strokeLinecap="round" />
+        <text x="211" y="155" className="fill-[#6b7280] text-[7px]">Sales</text>
+        <line x1="237" y1="152" x2="249" y2="152" stroke={COLORS.emerald} strokeWidth="2" strokeLinecap="round" />
+        <text x="252" y="155" className="fill-[#6b7280] text-[7px]">Marketing</text>
       </g>
     </svg>
   );
@@ -578,10 +802,9 @@ function Features() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-black/5 sm:grid-cols-3">
           <BenefitCard
             title="No query language"
-            gradient="from-white to-accent/[0.04]"
             icon="square"
           >
             Ask the way you'd ask a colleague. We handle the translation to the right chart type
@@ -589,7 +812,6 @@ function Features() {
           </BenefitCard>
           <BenefitCard
             title="Sensible by default"
-            gradient="from-white to-ink/[0.03]"
             icon="square-dark"
           >
             Trends become lines, parts become bars, relationships become scatter. You always see the
@@ -597,45 +819,13 @@ function Features() {
           </BenefitCard>
           <BenefitCard
             title="Refine, don't rebuild"
-            gradient="from-white to-accent/[0.06]"
             icon="circle"
           >
             "Make it a pie" or "group by quarter" — tweak any chart with a single follow-up line.
           </BenefitCard>
         </div>
 
-        <div className="mt-6 rounded-2xl bg-ink p-7 text-paper ring-1 ring-black/5 lg:p-9">
-          <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-accent">In practice</p>
-              <p className="mt-3 max-w-[32ch] font-display text-xl font-medium leading-snug">
-                "Our ops lead asked one question and had the churn chart in the next meeting."
-              </p>
-              <p className="mt-4 text-pretty text-sm text-paper/60">
-                No analyst wait, no ticket, no waiting on a data team. Just an answer.
-              </p>
-            </div>
-            <div className="rounded-xl bg-white/5 p-5 ring-1 ring-white/10">
-              <div className="flex items-center justify-between text-xs text-paper/50">
-                <span>Churn by month</span>
-                <span>Q3 trend</span>
-              </div>
-              <div className="mt-4 flex h-24 items-end gap-2">
-                {[
-                  { h: "80%", o: 1 }, { h: "64%", o: 0.8 }, { h: "52%", o: 0.65 },
-                  { h: "38%", o: 0.5 }, { h: "26%", o: 0.4 },
-                ].map((bar, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 rounded-t-sm bg-accent animate-growbar"
-                    style={{ height: bar.h, opacity: bar.o, animationDelay: `${400 + i * 80}ms` }}
-                  />
-                ))}
-              </div>
-              <div className="mt-3 text-xs text-paper/40">Falling quarter over quarter</div>
-            </div>
-          </div>
-        </div>
+
       </div>
     </section>
   );
@@ -643,12 +833,10 @@ function Features() {
 
 function BenefitCard({
   title,
-  gradient,
   icon,
   children,
 }: {
   title: string;
-  gradient: string;
   icon: "square" | "square-dark" | "circle";
   children: React.ReactNode;
 }) {
@@ -658,9 +846,7 @@ function BenefitCard({
   const iconShape = icon === "circle" ? "rounded-full" : "rounded-sm";
 
   return (
-    <div
-      className={`rounded-2xl bg-gradient-to-b p-6 ring-1 ring-black/5 transition-transform hover:-translate-y-0.5 ${gradient}`}
-    >
+    <div className="bg-paper p-6 sm:p-7">
       <span className={`grid size-8 place-items-center rounded-lg ${iconBg}`}>
         <span className={`size-3 ${iconShape} ${iconColor}`} />
       </span>
