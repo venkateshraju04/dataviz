@@ -85,81 +85,86 @@ function AnalyzePage() {
         <div className="grid gap-8 lg:grid-cols-12">
           {/* ---- Left panel: Inputs ---- */}
           <aside className="lg:col-span-4 xl:col-span-4">
-            <div className="sticky top-8 space-y-6">
-              {/* File upload */}
-              <div>
-                <label className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-soft">
-                  Dataset
-                </label>
-                <FileUpload file={file} onFileSelect={setFile} onClear={handleClear} />
-              </div>
+            <div className="sticky top-8 flex max-h-[calc(100vh-5rem)] flex-col rounded-2xl border border-line bg-white ring-1 ring-black/[0.03] lg:max-h-[calc(100vh-5rem)]">
+              {/* Scrollable content area */}
+              <div className="flex-1 space-y-6 overflow-y-auto p-6">
+                {/* File upload */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-soft">
+                    Dataset
+                  </label>
+                  <FileUpload file={file} onFileSelect={setFile} onClear={handleClear} />
+                </div>
 
-              {/* Data preview */}
-              {file && <DataPreview file={file} />}
+                {/* Data preview */}
+                {file && <DataPreview file={file} />}
 
-              {/* Query input */}
-              <div>
-                <label
-                  htmlFor="query-input"
-                  className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-soft"
-                >
-                  Your question
-                </label>
-                <textarea
-                  id="query-input"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. Plot the distribution of ages…"
-                  rows={4}
-                  className="w-full resize-none rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-soft/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                />
-              </div>
+                {/* Query input */}
+                <div>
+                  <label
+                    htmlFor="query-input"
+                    className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-soft"
+                  >
+                    Your question
+                  </label>
+                  <textarea
+                    id="query-input"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="e.g. Plot the distribution of ages…"
+                    rows={4}
+                    className="w-full resize-none rounded-xl border border-line bg-paper/60 px-4 py-3 text-sm text-ink placeholder:text-soft/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                  />
+                </div>
 
-              {/* Example queries */}
-              <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-soft">
-                  Try an example
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {EXAMPLE_QUERIES.map((eq) => (
-                    <button
-                      key={eq}
-                      onClick={() => setQuery(eq)}
-                      className="rounded-lg border border-line bg-white px-3 py-1.5 text-xs text-soft transition-all hover:border-accent/40 hover:text-ink hover:bg-accent/[0.03]"
-                    >
-                      {eq}
-                    </button>
-                  ))}
+                {/* Example queries */}
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-soft">
+                    Try an example
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {EXAMPLE_QUERIES.map((eq) => (
+                      <button
+                        key={eq}
+                        onClick={() => setQuery(eq)}
+                        className="rounded-lg border border-line bg-paper/60 px-3 py-1.5 text-xs text-soft transition-all hover:border-accent/40 hover:text-ink hover:bg-accent/[0.03]"
+                      >
+                        {eq}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Run button */}
-              <button
-                onClick={handleAnalyze}
-                disabled={!canRun}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all ${
-                  canRun
-                    ? "bg-accent text-white ring-1 ring-inset ring-accent/40 hover:bg-accent/90 active:scale-[0.98]"
-                    : "cursor-not-allowed bg-line text-soft"
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <svg className="size-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Analyzing…
-                  </>
-                ) : (
-                  <>
-                    <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                    </svg>
-                    Run Analysis
-                  </>
-                )}
-              </button>
+              {/* Pinned Run button */}
+              <div className="border-t border-line bg-white p-4">
+                <button
+                  onClick={handleAnalyze}
+                  disabled={!canRun}
+                  className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all ${
+                    canRun
+                      ? "bg-accent text-white ring-1 ring-inset ring-accent/40 hover:bg-accent/90 active:scale-[0.98]"
+                      : "cursor-not-allowed bg-line text-soft"
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <svg className="size-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Analyzing…
+                    </>
+                  ) : (
+                    <>
+                      <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                      </svg>
+                      Run Analysis
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </aside>
 
