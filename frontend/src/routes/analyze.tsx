@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, type KeyboardEvent } from "react";
 import FileUpload from "../components/FileUpload";
 import DataPreview from "../components/DataPreview";
 import AnalysisResults from "../components/AnalysisResults";
@@ -111,10 +111,21 @@ function AnalyzePage() {
                     id="query-input"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
+                      if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && canRun) {
+                        e.preventDefault();
+                        handleAnalyze();
+                      }
+                    }}
                     placeholder="e.g. Plot the distribution of ages…"
                     rows={4}
                     className="w-full resize-none rounded-xl border border-line bg-paper/60 px-4 py-3 text-sm text-ink placeholder:text-soft/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
+                  <p className="mt-1.5 text-right text-[11px] text-soft/60">
+                    <kbd className="rounded border border-line bg-paper px-1 py-0.5 font-mono text-[10px]">⌘</kbd>{" "}
+                    <kbd className="rounded border border-line bg-paper px-1 py-0.5 font-mono text-[10px]">↵</kbd>{" "}
+                    to run
+                  </p>
                 </div>
 
                 {/* Example queries */}
