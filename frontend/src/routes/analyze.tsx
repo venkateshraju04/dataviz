@@ -35,6 +35,7 @@ function AnalyzePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const queryInputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleAnalyze = useCallback(async () => {
     if (!file || !query.trim()) return;
@@ -46,6 +47,9 @@ function AnalyzePage() {
     try {
       const data = await analyzeData(file, query.trim());
       setResult(data);
+      // Clear query and focus for follow-up
+      setQuery("");
+      setTimeout(() => queryInputRef.current?.focus(), 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -105,9 +109,15 @@ function AnalyzePage() {
                     htmlFor="query-input"
                     className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-soft"
                   >
-                    Your question
+                    {result ? "Ask a follow-up" : "Your question"}
                   </label>
+                  {result && (
+                    <p className="mb-2 text-xs text-accent/80">
+                      Refine the chart — e.g. "Make it a pie chart" or "Group by quarter"
+                    </p>
+                  )}
                   <textarea
+                    ref={queryInputRef}
                     id="query-input"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
