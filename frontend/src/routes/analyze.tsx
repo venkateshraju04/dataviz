@@ -105,7 +105,7 @@ function AnalyzePage() {
       </header>
 
       {/* Main layout */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <main id="main-content" className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-8 lg:grid-cols-12">
           {/* ---- Left panel: Inputs ---- */}
           <aside className="lg:col-span-4 xl:col-span-4">
@@ -210,7 +210,7 @@ function AnalyzePage() {
           </aside>
 
           {/* ---- Right panel: Results ---- */}
-          <main className="lg:col-span-8 xl:col-span-8">
+          <div className="lg:col-span-8 xl:col-span-8">
             {/* Loading */}
             {isLoading && <LoadingState onCancel={handleCancel} />}
 
@@ -268,9 +268,9 @@ function AnalyzePage() {
                 </div>
               </div>
             )}
-          </main>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

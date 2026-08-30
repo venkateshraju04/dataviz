@@ -33,10 +33,12 @@ function Index() {
   return (
     <div className="min-h-screen bg-paper font-body text-ink antialiased selection:bg-accent/15">
       <Header />
-      <Hero />
-      <HowItWorks />
-      <Features />
-      <CtaBand />
+      <main id="main-content">
+        <Hero />
+        <HowItWorks />
+        <Features />
+        <CtaBand />
+      </main>
       <Footer />
     </div>
   );
@@ -302,7 +304,7 @@ function Hero() {
             </div>
 
             {/* Chart area */}
-            <div className="mx-5 mt-5 pb-5">
+            <div className="mx-5 mt-5 pb-5" aria-live="polite" aria-atomic="true">
               <div className="flex items-baseline justify-between">
                 <span
                   key={`title-${activeIndex}`}

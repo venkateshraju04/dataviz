@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type DragEvent, type ChangeEvent } from "react";
+import { useCallback, useRef, useState, type DragEvent, type ChangeEvent, type KeyboardEvent } from "react";
 
 interface FileUploadProps {
   /** Called when a valid file is selected or dropped. */
@@ -103,11 +103,19 @@ export default function FileUpload({ onFileSelect, file, onClear }: FileUploadPr
   return (
     <div>
       <div
+        role="button"
+        tabIndex={0}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onClick={() => inputRef.current?.click()}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-10 text-center transition-all ${
+        onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-10 text-center transition-all focus:outline-none focus:ring-2 focus:ring-accent/40 ${
           isDragOver
             ? "border-accent bg-accent/5 ring-2 ring-accent/20"
             : "border-line bg-white hover:border-accent/40 hover:bg-accent/[0.02]"

@@ -40,7 +40,7 @@ export default function LoadingState({ onCancel }: { onCancel?: () => void }) {
       {/* Step indicators */}
       <div className="mt-8 flex items-center gap-3">
         {STEPS.map((step, i) => (
-          <div key={i} className="flex items-center gap-3">
+          <div key={i} className="flex items-center gap-3" aria-current={i === currentStep ? "step" : undefined}>
             <div
               className={`flex size-8 items-center justify-center rounded-full text-xs font-medium transition-all duration-500 ${
                 i < currentStep
