@@ -310,15 +310,19 @@ function Hero() {
                   <span className="size-2 rounded-sm bg-accent" />
                   Generated in 0.8s
                 </div>
-                <div className="flex gap-1.5">
+                <div className="flex gap-0.5">
                   {CHART_SLIDES.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? "w-5 bg-accent" : "w-1.5 bg-line hover:bg-soft/40"
-                        }`}
+                      className="flex h-5 w-5 items-center justify-center"
                       aria-label={`View chart ${i + 1}`}
-                    />
+                    >
+                      <span
+                        className={`block h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? "w-4 bg-accent" : "w-1.5 bg-line hover:bg-soft/40"
+                          }`}
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
