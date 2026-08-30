@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -40,6 +40,31 @@ function Index() {
       <Footer />
     </div>
   );
+}
+
+function useInView(threshold = 0.15) {
+  const [inView, setInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
 }
 
 function Header() {
@@ -831,9 +856,11 @@ function AreaChart() {
 /* ====================================================================== */
 
 function HowItWorks() {
+  const { ref, inView } = useInView();
+
   return (
     <section id="how" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+      <div ref={ref} className={`mx-auto max-w-6xl px-6 py-16 lg:py-20 ${inView ? "animate-rise" : "opacity-0"}`}>
         <div className="max-w-[40ch]">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-accent">How it works</p>
           <h2 className="mt-3 max-w-[40ch] font-display text-3xl font-semibold leading-tight tracking-tight text-balance">
@@ -871,9 +898,11 @@ function StepCard({ number, title, children }: { number: string; title: string; 
 /* ====================================================================== */
 
 function Features() {
+  const { ref, inView } = useInView();
+
   return (
     <section id="features" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+      <div ref={ref} className={`mx-auto max-w-6xl px-6 py-16 lg:py-20 ${inView ? "animate-rise" : "opacity-0"}`}>
         <div className="max-w-[48ch]">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-accent">Why it feels effortless</p>
           <h2 className="mt-3 max-w-[40ch] font-display text-3xl font-semibold leading-tight tracking-tight text-balance">
@@ -940,9 +969,11 @@ function BenefitCard({
 /* ====================================================================== */
 
 function CtaBand() {
+  const { ref, inView } = useInView();
+
   return (
     <section id="cta" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+      <div ref={ref} className={`mx-auto max-w-6xl px-6 py-16 lg:py-20 ${inView ? "animate-rise" : "opacity-0"}`}>
         <div className="rounded-2xl bg-accent/5 p-8 text-center ring-1 ring-accent/15 lg:p-12">
           <h2 className="mx-auto max-w-[24ch] font-display text-3xl font-semibold leading-tight tracking-tight text-balance">
             Stop asking for charts. Start answering.
