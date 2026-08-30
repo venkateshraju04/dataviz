@@ -44,6 +44,7 @@ function Index() {
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -51,6 +52,18 @@ function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header
@@ -78,16 +91,64 @@ function Header() {
             Dashboard
           </Link>
         </nav>
-        <Link
-          to="/analyze"
-          className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
-        >
-          Get started
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/analyze"
+            className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-ink/90"
+          >
+            Get started
+          </Link>
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="grid size-9 place-items-center rounded-lg text-ink transition-colors hover:bg-ink/5 sm:hidden"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? (
+              <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div className="animate-rise border-t border-line bg-paper px-6 pb-6 pt-4 sm:hidden" style={{ animationDuration: "0.25s" }}>
+          <nav className="flex flex-col gap-1">
+            <a
+              href="#how"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-soft transition-colors hover:bg-ink/5 hover:text-ink"
+            >
+              How it works
+            </a>
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-soft transition-colors hover:bg-ink/5 hover:text-ink"
+            >
+              Features
+            </a>
+            <Link
+              to="/analyze"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-soft transition-colors hover:bg-ink/5 hover:text-ink"
+            >
+              Dashboard
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
+
 
 /* ====================================================================== */
 /* Hero with rotating chart carousel                                      */
