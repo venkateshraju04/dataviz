@@ -43,8 +43,23 @@ function Index() {
 }
 
 function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll(); // check initial position
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="border-b border-line">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line bg-paper/80 backdrop-blur-lg shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+          : "border-b border-line bg-paper"
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2.5">
           <span className="grid size-6 place-items-center rounded-md bg-accent">
