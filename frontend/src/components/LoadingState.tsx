@@ -11,7 +11,7 @@ const STEPS = [
  * Multi-step loading indicator that cycles through AI pipeline stages
  * to keep the user engaged during the 5-15 second analysis.
  */
-export default function LoadingState() {
+export default function LoadingState({ onCancel }: { onCancel?: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
@@ -69,6 +69,16 @@ export default function LoadingState() {
         ))}
       </div>
 
+      {/* Cancel button */}
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="mt-6 rounded-lg px-4 py-2 text-sm font-medium text-soft ring-1 ring-line transition-all hover:bg-paper hover:text-ink hover:ring-ink/15"
+        >
+          Cancel
+        </button>
+      )}
+
       {/* Shimmer bars */}
       <div className="mt-10 w-full max-w-sm space-y-3">
         <div className="h-3 animate-pulse rounded-full bg-line/60" style={{ width: "85%" }} />
@@ -78,3 +88,4 @@ export default function LoadingState() {
     </div>
   );
 }
+

@@ -36,26 +36,42 @@ function AnalyzePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const queryInputRef = useRef<HTMLTextAreaElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleAnalyze = useCallback(async () => {
     if (!file || !query.trim()) return;
+
+    // Abort any in-flight request
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     setIsLoading(true);
     setResult(null);
     setError(null);
 
     try {
-      const data = await analyzeData(file, query.trim());
+      const data = await analyzeData(file, query.trim(), controller.signal);
       setResult(data);
       // Clear query and focus for follow-up
       setQuery("");
       setTimeout(() => queryInputRef.current?.focus(), 100);
     } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        // User cancelled — silently reset
+        return;
+      }
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   }, [file, query]);
+
+  const handleCancel = useCallback(() => {
+    abortControllerRef.current?.abort();
+    setIsLoading(false);
+  }, []);
 
   const handleClear = useCallback(() => {
     setFile(null);
@@ -192,7 +208,7 @@ function AnalyzePage() {
           {/* ---- Right panel: Results ---- */}
           <main className="lg:col-span-8 xl:col-span-8">
             {/* Loading */}
-            {isLoading && <LoadingState />}
+            {isLoading && <LoadingState onCancel={handleCancel} />}
 
             {/* Results */}
             {!isLoading && result && <AnalysisResults result={result} />}

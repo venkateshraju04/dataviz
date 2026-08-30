@@ -45,6 +45,7 @@ const API_BASE_URL: string =
 export async function analyzeData(
   file: File,
   query: string,
+  signal?: AbortSignal,
 ): Promise<AnalysisResult> {
   const formData = new FormData();
   formData.append("file", file);
@@ -53,6 +54,7 @@ export async function analyzeData(
   const response = await fetch(`${API_BASE_URL}/api/analyze`, {
     method: "POST",
     body: formData,
+    signal,
     // Do NOT set Content-Type — the browser sets the correct multipart boundary.
   });
 
