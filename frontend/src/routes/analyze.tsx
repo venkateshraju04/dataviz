@@ -5,6 +5,7 @@ import DataPreview from "../components/DataPreview";
 import AnalysisResults from "../components/AnalysisResults";
 import LoadingState from "../components/LoadingState";
 import { analyzeData, type AnalysisResult } from "../lib/api";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/analyze")({
   component: AnalyzePage,
@@ -53,6 +54,7 @@ function AnalyzePage() {
     try {
       const data = await analyzeData(file, query.trim(), controller.signal);
       setResult(data);
+      toast.success("Analysis complete");
       // Clear query and focus for follow-up
       setQuery("");
       setTimeout(() => queryInputRef.current?.focus(), 100);
@@ -62,6 +64,7 @@ function AnalyzePage() {
         return;
       }
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      toast.error("Analysis failed");
     } finally {
       setIsLoading(false);
       abortControllerRef.current = null;
@@ -71,6 +74,7 @@ function AnalyzePage() {
   const handleCancel = useCallback(() => {
     abortControllerRef.current?.abort();
     setIsLoading(false);
+    toast.info("Analysis cancelled");
   }, []);
 
   const handleClear = useCallback(() => {

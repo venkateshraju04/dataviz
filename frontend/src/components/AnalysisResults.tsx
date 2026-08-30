@@ -2,6 +2,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { AnalysisResult } from "../lib/api";
+import { toast } from "sonner";
 
 interface AnalysisResultsProps {
   result: AnalysisResult;
@@ -101,6 +102,7 @@ function DownloadButton({ base64 }: { base64: string }) {
     link.href = `data:image/png;base64,${base64}`;
     link.download = "dataviz-chart.png";
     link.click();
+    toast.success("Chart downloaded");
   };
 
   return (
